@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🐾 Animal Akinator 🐾 - The Mind-Reading Animal Genie</title>
+  <meta name="description" content="Play the interactive Animal Akinator game! Think of an animal and let our magical genie guess it through simple Yes/No questions.">
+  
+  <!-- Google Fonts: Fredoka & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient background glow particles -->
+  <div class="stars-bg"></div>
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+  <div class="glow-orb orb-3"></div>
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="app-container">
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand-paw">🐾</span>
+        <span class="brand-text">Animal Akinator</span>
+      </div>
+      <div class="header-actions">
+        <button id="btn-mute" class="pill-btn" aria-label="Toggle Sound" title="Sound Effects">
+          <span class="icon">🔊</span>
+          <span>Sound</span>
+        </button>
+        <button id="btn-open-bestiary" class="pill-btn" aria-label="Animal Encyclopedia" title="View all animals">
+          <span class="icon">📖</span>
+          <span>Animals</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-card">
+      
+      <!-- SCREEN 1: Welcome Screen -->
+      <section id="welcome-screen" class="screen active">
+        <div class="welcome-content">
+          <div class="mascot-hero">
+            <div class="hero-aura"></div>
+            <div class="genie-mascot mood-idle">
+              <div class="genie-turban">
+                <span class="turban-gem">💎</span>
+                <span class="turban-feather">🪶</span>
+              </div>
+              <div class="genie-face">
+                <div class="genie-eyes">
+                  <span class="eye left"></span>
+                  <span class="eye right"></span>
+                </div>
+                <div class="genie-mouth"></div>
+              </div>
+              <div class="crystal-ball-wrap">
+                <div class="crystal-ball">
+                  <span class="ball-sparkle">✨</span>
+                  <span class="ball-glow"></span>
+                </div>
+              </div>
+            </div>
+            <div class="floating-animals">
+              <span class="float-emoji e1">🦁</span>
+              <span class="float-emoji e2">🐬</span>
+              <span class="float-emoji e3">🦅</span>
+              <span class="float-emoji e4">🐘</span>
+              <span class="float-emoji e5">🦜</span>
+            </div>
+          </div>
+
+          <h1 class="game-title">🐾 Animal Akinator 🐾</h1>
+          <p class="welcome-instruction">
+            Think of an animal and answer the questions with Yes or No.
+          </p>
+
+          <div class="features-summary">
+            <div class="feature-tag">🎯 Smart AI Logic</div>
+            <div class="feature-tag">🦊 20+ Animals</div>
+            <div class="feature-tag">🔊 Sound Effects</div>
+          </div>
+
+          <button id="btn-start-game" class="btn-primary pulse-btn" id="start-game-btn">
+            <span>Play Game</span>
+            <span class="btn-arrow">➔</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- SCREEN 2: Game / Question Screen -->
+      <section id="game-screen" class="screen">
+        <!-- Progress & Confidence Header -->
+        <div class="game-hud">
+          <div class="hud-item hud-counter">
+            <span class="hud-label">Progress</span>
+            <span id="question-number" class="hud-value">Question 1 of 8</span>
+          </div>
+
+          <div class="hud-item hud-confidence">
+            <div class="confidence-header">
+              <span class="hud-label">Genie Confidence</span>
+              <span id="confidence-val" class="hud-value">0%</span>
+            </div>
+            <div class="progress-track">
+              <div id="confidence-bar" class="progress-fill" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Mascot & Speech Bubble -->
+        <div class="mascot-stage">
+          <div class="speech-bubble-container">
+            <div id="mascot-speech" class="speech-bubble">
+              Close your eyes... Picture your animal clearly in your mind! 🧠✨
+            </div>
+          </div>
+
+          <div id="genie-mascot" class="genie-mascot mood-thinking">
+            <div class="genie-turban">
+              <span class="turban-gem">💎</span>
+              <span class="turban-feather">🪶</span>
+            </div>
+            <div class="genie-face">
+              <div class="genie-eyes">
+                <span class="eye left"></span>
+                <span class="eye right"></span>
+              </div>
+              <div class="genie-mouth"></div>
+            </div>
+            <div class="crystal-ball-wrap">
+              <div id="crystal-ball" class="crystal-ball">
+                <span class="ball-sparkle">✨</span>
+                <span class="ball-glow"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Question Card -->
+        <div id="question-card" class="question-card active-card">
+          <div class="card-inner">
+            <div id="question-emoji" class="question-emoji">🦁</div>
+            <h2 id="question-text" class="question-text">Does it have fur?</h2>
+            <p id="question-hint" class="question-hint">Think about whether its body is covered in soft fur or hair.</p>
+          </div>
+        </div>
+
+        <!-- Answer Controls -->
+        <div class="answer-actions">
+          <button id="btn-yes" class="btn-action btn-yes" title="Press Y or 1">
+            <span class="btn-icon">👍</span>
+            <span class="btn-text">Yes</span>
+            <span class="kbd-hint">Y</span>
+          </button>
+          <button id="btn-no" class="btn-action btn-no" title="Press N or 2">
+            <span class="btn-icon">👎</span>
+            <span class="btn-text">No</span>
+            <span class="kbd-hint">N</span>
+          </button>
+          <button id="btn-dontknow" class="btn-action btn-dontknow" title="Press D or 3">
+            <span class="btn-icon">🤷</span>
+            <span class="btn-text">Don't Know</span>
+            <span class="kbd-hint">D</span>
+          </button>
+        </div>
+
+        <!-- Undo control footer -->
+        <div class="game-footer-actions">
+          <button id="btn-undo" class="btn-secondary btn-undo" disabled title="Press U or Backspace">
+            <span>↩️ Previous Question</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- SCREEN 3: Guess Screen -->
+      <section id="guess-screen" class="screen">
+        <div class="guess-content">
+          <div class="guess-badge">Prediction Revealed</div>
+          
+          <h2 class="guess-header-title">
+            🎉 I think your animal is: <span id="guess-name" class="highlight-name">Lion</span>!
+          </h2>
+
+          <div class="guess-display-card">
+            <div class="glow-ring"></div>
+            <div id="guess-emoji" class="guess-big-emoji">🦁</div>
+            <div id="guess-category" class="guess-category">Mammal / Big Cat</div>
+            <p id="guess-fact" class="guess-fact">
+              Known as the 'King of the Jungle', a male lion's roar can be heard up to 8 kilometers away!
+            </p>
+          </div>
+
+          <div class="guess-confirmation">
+            <p class="confirm-prompt">Did the Great Akinator guess correctly?</p>
+            <div class="confirm-buttons">
+              <button id="btn-guess-yes" class="btn-action btn-yes">
+                <span>🎯 Yes, that's it!</span>
+              </button>
+              <button id="btn-guess-no" class="btn-action btn-no">
+                <span>❌ No, wrong guess</span>
+              </button>
+              <button id="btn-play-again-guess" class="btn-primary" style="display: none;">
+                <span>🔄 Play Again</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN 4: Fallback / Stumped Screen -->
+      <section id="fallback-screen" class="screen">
+        <div class="fallback-content">
+          <div class="stumped-emoji">🤔</div>
+          <h2 class="fallback-title">I couldn't guess your animal. Try another animal!</h2>
+          <p id="fallback-reason" class="fallback-text">
+            Your animal was too mysterious or not yet in my ancient scrolls.
+          </p>
+
+          <div class="fallback-actions">
+            <button id="btn-play-again-fallback" class="btn-primary">
+              <span>🔄 Play Again</span>
+            </button>
+            <button id="btn-teach-akinator" class="btn-secondary">
+              <span>🎓 Teach Akinator This Animal</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Animal Bestiary Modal -->
+  <div id="bestiary-modal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-container">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h3>📖 Animal Bestiary</h3>
+          <p class="modal-subtitle">All creatures recognized by the Akinator</p>
+        </div>
+        <button id="btn-close-bestiary" class="modal-close-btn" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-search">
+        <input type="text" id="bestiary-search" placeholder="🔍 Search animals by name or category...">
+      </div>
+      <div id="bestiary-grid" class="bestiary-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Teach Modal -->
+  <div id="teach-modal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-container modal-small">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h3>🎓 Teach the Akinator</h3>
+          <p class="modal-subtitle">Add your creature so the genie knows it next time!</p>
+        </div>
+        <button id="btn-close-teach" class="modal-close-btn" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="teach-form" class="teach-form">
+        <div class="form-group">
+          <label for="teach-name">Animal Name:</label>
+          <input type="text" id="teach-name" placeholder="e.g., Platypus, Cheetah, Otter" required>
+        </div>
+        <div class="form-group">
+          <label for="teach-emoji">Animal Emoji:</label>
+          <input type="text" id="teach-emoji" placeholder="e.g., 🦦 or 🐆" maxlength="4">
+        </div>
+        <button type="submit" class="btn-primary">
+          <span>Save to Memory ✨</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="animals.js"></script>
+  <script src="engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
